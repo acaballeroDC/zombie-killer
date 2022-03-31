@@ -23,7 +23,7 @@ import javax.swing.border.Border;
 
 import mundo.SurvivorCamp;
 
-public class PanelMenu extends JPanel implements KeyListener, ActionListener, MouseListener {
+public class PanelMenu extends Componente implements KeyListener, ActionListener, MouseListener {
 
 	private static final String CONTINUAR = "Continuar";
 	private static final String INICIAR = "Iniciar Nuevo Juego";
@@ -33,7 +33,7 @@ public class PanelMenu extends JPanel implements KeyListener, ActionListener, Mo
 	private static final String CREDITOS = "Créditos";
 	private static final String MEJORES_PUNTAJES = "Mejores Puntajes";
 
-	private InterfazZombieKiller principal;
+	
 	private JButton butIniciarJuego;
 	private JButton butContinuar;
 	private JButton butCargar;
@@ -45,7 +45,7 @@ public class PanelMenu extends JPanel implements KeyListener, ActionListener, Mo
 	public PanelMenu(InterfazZombieKiller interfazZombieKiller) {
 		setFocusable(true);
 		setLayout(new GridLayout(9, 2));
-		principal = interfazZombieKiller;
+		super.setMediador(interfazZombieKiller);
 		addKeyListener(this);
 
 		JLabel aux = new JLabel();
@@ -113,7 +113,7 @@ public class PanelMenu extends JPanel implements KeyListener, ActionListener, Mo
 		Image Palabras = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/Fondo/fondoMenu.png"));
 		g.drawImage(Palabras, 0, 0, null);
 		
-		if(principal.getEstadoPartida()==SurvivorCamp.PAUSADO) {
+		if(super.m.getEstadoPartida()==SurvivorCamp.PAUSADO) {
 			butContinuar.setEnabled(true);
 			butGuardar.setEnabled(true);
 		}
@@ -126,8 +126,8 @@ public class PanelMenu extends JPanel implements KeyListener, ActionListener, Mo
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 //		System.out.println(arg0.getKeyCode());
-		if (arg0.getKeyCode() == 80 && principal.getEstadoPartida()==SurvivorCamp.PAUSADO)
-			principal.pausarJuego();
+		if (arg0.getKeyCode() == 80 && super.m.getEstadoPartida()==SurvivorCamp.PAUSADO)
+			super.m.pausarJuego();
 	}
 
 	@Override
@@ -146,19 +146,19 @@ public class PanelMenu extends JPanel implements KeyListener, ActionListener, Mo
 	public void actionPerformed(ActionEvent arg0) {
 		String cmnd = arg0.getActionCommand();
 		if (cmnd.equals(INICIAR))
-			principal.iniciarNuevaPartida();
+			super.m.iniciarNuevaPartida();
 		else if (cmnd.equals(CONTINUAR))
-			principal.pausarJuego();
+			super.m.pausarJuego();
 		else if (cmnd.equals(CARGAR))
-			principal.cargarJuego();
+			super.m.cargarJuego();
 		else if(cmnd.equals(GUARDAR))
-			principal.guardarJuego();
+			super.m.guardarJuego();
 		else if(cmnd.equals(COMO_JUGAR))
-			principal.mostrarComoJugar();
+			super.m.mostrarComoJugar();
 		else if(cmnd.equals(MEJORES_PUNTAJES))
-			principal.mostrarPuntajes();
+			super.m.mostrarPuntajes();
 		else if(cmnd.equals(CREDITOS))
-			principal.mostrarCreditos();
+			super.m.mostrarCreditos();
 	}
 
 	@Override

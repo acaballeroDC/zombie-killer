@@ -19,7 +19,7 @@ import mundo.Granada;
 import mundo.M1911;
 import mundo.Remington;
 
-public class PanelArmas extends JPanel implements ActionListener{
+public class PanelArmas extends Componente implements ActionListener{
 
 	private static final String ANTERIOR = "a";
 	private static final String POSTERIOR = "p";
@@ -28,13 +28,13 @@ public class PanelArmas extends JPanel implements ActionListener{
 	private PanelAtributos [] panelAtributos;
 	private JButton butAnterior;
 	private JButton butPosterior;
-	private InterfazZombieKiller principal;
+	
 //	http://es.halo.wikia.com/wiki/Granada_Incendiaria_Antipersonal_Tipo-3
 	
 	public PanelArmas (InterfazZombieKiller inter) {
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
-		principal = inter;
+		super.setMediador(inter);
 //		JPanel auxNorte = new JPanel();
 //		auxNorte.setLayout(new BorderLayout());
 //		auxNorte.setBackground(Color.BLACK);
@@ -137,21 +137,21 @@ public class PanelArmas extends JPanel implements ActionListener{
 	}
 
 	private void verDerecha() {
-		labArmas[principal.darArmaMostrada()].setVisible(false);
-		panelAtributos[principal.darArmaMostrada()].setVisible(false);
-		int aMostrar = principal.cambiarArmaVisibleDerecha();
-		labArmas[principal.darArmaMostrada()].setVisible(true);
-		panelAtributos[principal.darArmaMostrada()].setVisible(true);
+		labArmas[super.m.darArmaMostrada()].setVisible(false);
+		panelAtributos[super.m.darArmaMostrada()].setVisible(false);
+		int aMostrar = super.m.cambiarArmaVisibleDerecha();
+		labArmas[super.m.darArmaMostrada()].setVisible(true);
+		panelAtributos[super.m.darArmaMostrada()].setVisible(true);
 		add(labArmas[aMostrar], BorderLayout.CENTER);
 		add(panelAtributos[aMostrar], BorderLayout.SOUTH);
 	}
 
 	private void verIzquierda() {
-		labArmas[principal.darArmaMostrada()].setVisible(false);
-		panelAtributos[principal.darArmaMostrada()].setVisible(false);
-		int aMostrar = principal.cambiarArmaVisibleIzquierda();
-		labArmas[principal.darArmaMostrada()].setVisible(true);
-		panelAtributos[principal.darArmaMostrada()].setVisible(true);
+		labArmas[super.m.darArmaMostrada()].setVisible(false);
+		panelAtributos[super.m.darArmaMostrada()].setVisible(false);
+		int aMostrar = super.m.cambiarArmaVisibleIzquierda();
+		labArmas[super.m.darArmaMostrada()].setVisible(true);
+		panelAtributos[super.m.darArmaMostrada()].setVisible(true);
 		add(labArmas[aMostrar], BorderLayout.CENTER);
 		add(panelAtributos[aMostrar], BorderLayout.SOUTH);
 	}

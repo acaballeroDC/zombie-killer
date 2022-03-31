@@ -7,16 +7,17 @@ import java.awt.event.KeyListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class PanelCreditos extends JPanel implements KeyListener{
+public class PanelCreditos extends Componente implements KeyListener{
 
 	private JLabel labCreditos;
-	private InterfazZombieKiller principal;
+	
 	
 	public PanelCreditos(InterfazZombieKiller interfazZombieKiller) {
 		addKeyListener(this);
 		setFocusable(true);
 		setBackground(Color.black);
-		principal = interfazZombieKiller;
+		super.setMediador(interfazZombieKiller);
+		super.m = interfazZombieKiller;
 		labCreditos = new JLabel("En proceso, presiona \"Esc\" para volver");
 		labCreditos.setForeground(Color.white);
 		add(labCreditos);
@@ -25,7 +26,7 @@ public class PanelCreditos extends JPanel implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE)
-			principal.mostrarCreditos();
+			super.m.mostrarCreditos();
 	}
 
 	@Override
