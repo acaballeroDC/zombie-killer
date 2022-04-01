@@ -24,7 +24,7 @@ import mundo.Remington;
 import mundo.SurvivorCamp;
 import mundo.Zombie;
 
-public class InterfazZombieKiller extends JFrame {
+public class InterfazZombieKiller extends JFrame implements IInterfazZombieKiller {
 
 	/**
 	 * Hilo que reproduce el sonido de los zombies

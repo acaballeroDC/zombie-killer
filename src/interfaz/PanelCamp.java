@@ -37,7 +37,7 @@ public class PanelCamp extends Componente implements MouseListener, KeyListener 
 	private ArmaDeFuego armaEquipada;
 	private Boss chief;
 
-	public PanelCamp(InterfazZombieKiller inter) {
+	public PanelCamp(IInterfazZombieKiller inter) {
 		setLayout(new BorderLayout());
 		Font tipo = new Font("Chiller", Font.PLAIN, 34);
 		super.setMediador(inter);

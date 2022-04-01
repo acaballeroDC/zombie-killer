@@ -31,7 +31,7 @@ public class PanelArmas extends Componente implements ActionListener{
 	
 //	http://es.halo.wikia.com/wiki/Granada_Incendiaria_Antipersonal_Tipo-3
 	
-	public PanelArmas (InterfazZombieKiller inter) {
+	public PanelArmas (IInterfazZombieKiller inter) {
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 		super.setMediador(inter);

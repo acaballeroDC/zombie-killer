@@ -40,7 +40,7 @@ public class PanelPuntajes extends Componente implements ActionListener {
 	private JButton butSalir;
 	
 
-	public PanelPuntajes(InterfazZombieKiller inter) {
+	public PanelPuntajes(IInterfazZombieKiller inter) {
 		super.setMediador(inter);
 		setBackground(Color.black);
 		Font f = new Font("Chiller", Font.BOLD, 26);

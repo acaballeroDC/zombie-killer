@@ -22,7 +22,7 @@ public class PanelComoJugar extends Componente {
 	private JButton butSalir;
 	
 	
-	public PanelComoJugar (InterfazZombieKiller inter) {
+	public PanelComoJugar (IInterfazZombieKiller inter) {
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 		super.setMediador(inter);

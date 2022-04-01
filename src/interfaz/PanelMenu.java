@@ -42,7 +42,7 @@ public class PanelMenu extends Componente implements KeyListener, ActionListener
 	private JButton butCreditos;
 	private JButton butPuntajes;
 
-	public PanelMenu(InterfazZombieKiller interfazZombieKiller) {
+	public PanelMenu(IInterfazZombieKiller interfazZombieKiller) {
 		setFocusable(true);
 		setLayout(new GridLayout(9, 2));
 		super.setMediador(interfazZombieKiller);

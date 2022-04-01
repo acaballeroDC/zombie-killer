@@ -12,7 +12,7 @@ public class PanelCreditos extends Componente implements KeyListener{
 	private JLabel labCreditos;
 	
 	
-	public PanelCreditos(InterfazZombieKiller interfazZombieKiller) {
+	public PanelCreditos(IInterfazZombieKiller interfazZombieKiller) {
 		addKeyListener(this);
 		setFocusable(true);
 		setBackground(Color.black);
