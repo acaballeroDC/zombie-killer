@@ -418,10 +418,10 @@ public class SurvivorCamp implements Cloneable, Comparator<Puntaje> {
 						int direccionX = Integer.parseInt(datos[5]);
 						int direccionY = Integer.parseInt(datos[6]);
 						verificarDatosCaminante(direccionX, direccionY);
-						aAgregar = new Caminante(posX, posY, direccionX, direccionY, estadoActual, frameActual, salud,
+						aAgregar = (Zombie) EnemigoFactory.createEnemigo("Caminante",posX, posY, direccionX, direccionY, estadoActual, frameActual, salud,
 								ronda);
 					} else if (datos.length == 5) {
-						aAgregar = new Rastrero(posX, posY, estadoActual, frameActual, salud, ronda);
+						aAgregar = (Zombie) EnemigoFactory.createEnemigo("Rastrero",posX, posY, estadoActual, frameActual, salud, ronda);
 					}
 				}
 				if (aAgregar != null) {
