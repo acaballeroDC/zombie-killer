@@ -10,8 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -81,15 +81,16 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	}
 
 	private void generaryAgregarLabels(ArrayList<Puntaje> scores) {
+		int SCORES_LIMIT = 2;
 		labScores = new JLabel[scores.size()];
 		labNombres = new JLabel[scores.size()];
 		labHeadShots = new JLabel[scores.size()];
 		labBajas = new JLabel[scores.size()];
 		JPanel auxPuntajes = new JPanel();
 		auxPuntajes.setBackground(Color.black);
-		if (scores.size() > 10) {
+		if (scores.size() > SCORES_LIMIT) {
 			auxPuntajes.setLayout(new GridLayout(11, 4));
-			titulo.setText("Top 10 Mejores Puntajes");
+			titulo.setText(String.format("Top %d Mejores Puntajes", SCORES_LIMIT));
 		} else
 			auxPuntajes.setLayout(new GridLayout(scores.size() + 1, 4));
 		JLabel labScore = new JLabel("Score");
@@ -104,19 +105,24 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 		auxPuntajes.add(labScore);
 		auxPuntajes.add(labKills);
 		auxPuntajes.add(labTC);
-		for (int i = 0; i < scores.size() && i < 10; i++) {
-			labScores[i] = new JLabel(scores.get(i).getPuntaje() + "");
-			labScores[i].setForeground(Color.WHITE);
-			labNombres[i] = new JLabel(scores.get(i).getNombreKiller());
-			labNombres[i].setForeground(Color.WHITE);
-			labHeadShots[i] = new JLabel(scores.get(i).getTirosALaCabeza() + "");
-			labHeadShots[i].setForeground(Color.WHITE);
-			labBajas[i] = new JLabel(scores.get(i).getBajas() + "");
-			labBajas[i].setForeground(Color.WHITE);
-			auxPuntajes.add(labNombres[i]);
-			auxPuntajes.add(labScores[i]);
-			auxPuntajes.add(labBajas[i]);
-			auxPuntajes.add(labHeadShots[i]);
+		ListIterator<Puntaje> scoresIterator = scores.listIterator();
+		while (scoresIterator.hasNext()) {
+			int scoreIndex = scoresIterator.nextIndex();
+			if (scoreIndex < SCORES_LIMIT) {
+				Puntaje scoreValue = scoresIterator.next();
+				labScores[scoreIndex] = new JLabel(scoreValue.getPuntaje() + "");
+				labScores[scoreIndex].setForeground(Color.WHITE);
+				labNombres[scoreIndex] = new JLabel(scoreValue.getNombreKiller());
+				labNombres[scoreIndex].setForeground(Color.WHITE);
+				labHeadShots[scoreIndex] = new JLabel(scoreValue.getTirosALaCabeza() + "");
+				labHeadShots[scoreIndex].setForeground(Color.WHITE);
+				labBajas[scoreIndex] = new JLabel(scoreValue.getBajas() + "");
+				labBajas[scoreIndex].setForeground(Color.WHITE);
+				auxPuntajes.add(labNombres[scoreIndex]);
+				auxPuntajes.add(labScores[scoreIndex]);
+				auxPuntajes.add(labBajas[scoreIndex]);
+				auxPuntajes.add(labHeadShots[scoreIndex]);
+			}
 		}
 		add(auxPuntajes, BorderLayout.CENTER);
 	}
@@ -147,7 +153,7 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 			generaryAgregarLabels(aMostrar);
 			updateUI();
 		} else
-			JOptionPane.showMessageDialog(this, "No se encontró el nombre buscado en los puntajes");
+			JOptionPane.showMessageDialog(this, "No se encontrï¿½ el nombre buscado en los puntajes");
 	}
 
 	@Override
