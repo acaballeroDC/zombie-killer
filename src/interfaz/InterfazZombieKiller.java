@@ -11,11 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import commands.HiloArma;
-import commands.HiloBoss;
-import commands.HiloEnemigo;
-import commands.HiloGeneradorDeZombies;
-import commands.HiloSonido;
 import control.HiloAdmin;
 import mundo.ArmaDeFuego;
 import mundo.Boss;
@@ -26,10 +21,6 @@ import mundo.SurvivorCamp;
 import mundo.Zombie;
 
 public class InterfazZombieKiller extends JFrame {
-	/**
-	 * Hilo que reproduce el sonido de los zombies
-	 */
-	private HiloSonido sonidoFondo;
 	/**
 	 * Administrador de hilos (comandos)
 	 */
@@ -160,11 +151,12 @@ public class InterfazZombieKiller extends JFrame {
 		panelCampo.setVisible(true);
 		add(panelCampo, BorderLayout.CENTER);
 		panelCampo.requestFocusInWindow();
-		Thread hGeneradorDeZombies = new HiloGeneradorDeZombies(this, campo);
-		Thread hEnemigo = new HiloEnemigo(this, campo.getZombNodoCercano(), campo);
-		administradorHilos.setCommand(hGeneradorDeZombies);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCampo(campo);
+		administradorHilos.setNodoCercano(campo.getZombNodoCercano());
+		administradorHilos.setCommand("generadorZombies");
 		administradorHilos.execute();
-		administradorHilos.setCommand(hEnemigo);
+		administradorHilos.setCommand("enemigo");
 		administradorHilos.execute();
 	}
 
@@ -210,11 +202,12 @@ public class InterfazZombieKiller extends JFrame {
 			campo.setEstadoJuego(campo.EN_CURSO);
 			add(panelCampo, BorderLayout.CENTER);
 			panelCampo.requestFocusInWindow();
-			Thread hGeneradorDeZombies = new HiloGeneradorDeZombies(this, campo);
-			Thread hEnemigo = new HiloEnemigo(this, campo.getZombNodoCercano(), campo);
-			administradorHilos.setCommand(hGeneradorDeZombies);
+			administradorHilos.setPrincipal(this);
+			administradorHilos.setCampo(campo);
+			administradorHilos.setNodoCercano(campo.getZombNodoCercano());
+			administradorHilos.setCommand("generadorZombies");
 			administradorHilos.execute();
-			administradorHilos.setCommand(hEnemigo);
+			administradorHilos.setCommand("enemigo");
 			administradorHilos.execute();
 			iniciarGemi2();
 		} catch (Exception e) {
@@ -261,8 +254,9 @@ public class InterfazZombieKiller extends JFrame {
 			reproducir("leDio" + armaActual.getClass().getSimpleName());
 		} else
 			reproducir("disparo" + armaActual.getClass().getSimpleName());
-		Thread hArma = new HiloArma(this, armaActual);
-		administradorHilos.setCommand(hArma);
+		administradorHilos.setWeapon(armaActual);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
 		administradorHilos.execute();
 	}
 
@@ -270,16 +264,16 @@ public class InterfazZombieKiller extends JFrame {
 	 * inicia el sonido de los zombies
 	 */
 	public void iniciarGemi2() {
-		sonidoFondo = new HiloSonido("zombies");
-		sonidoFondo.start();
+		administradorHilos.setBackgroundSound("zombies");
+		administradorHilos.executeBackgroundSound();
 	}
 
 	/**
 	 * termina el sonido de los zombies
 	 */
 	public void terminarGemi2() {
-		if (sonidoFondo != null)
-			sonidoFondo.detenerSonido();
+		if (administradorHilos.getBackgroundSound() != null)
+			administradorHilos.stopBackgroundSound();
 	}
 
 	/**
@@ -328,10 +322,10 @@ public class InterfazZombieKiller extends JFrame {
 	 */
 	public void granadaLanzada() {
 		campo.seLanzoGranada();
-		Thread hArma = new HiloArma(this, campo.getPersonaje().getGranadas());
-		administradorHilos.setCommand(hArma);
+		administradorHilos.setWeapon(campo.getPersonaje().getGranadas());
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
 		administradorHilos.execute();
-		reproducir("bomba");
 	}
 
 	/**
@@ -340,8 +334,9 @@ public class InterfazZombieKiller extends JFrame {
 	public void cargarArmaPersonaje() {
 		campo.getPersonaje().cargo();
 		reproducir("carga" + armaActual.getClass().getSimpleName());
-		Thread hArma = new HiloArma(this, armaActual);
-		administradorHilos.setCommand(hArma);
+		administradorHilos.setWeapon(armaActual);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
 		administradorHilos.execute();
 	}
 
@@ -351,8 +346,8 @@ public class InterfazZombieKiller extends JFrame {
 	 * @param ruta
 	 */
 	public void reproducir(String ruta) {
-		Thread hSonido = new HiloSonido(ruta);
-		administradorHilos.setCommand(hSonido);
+		administradorHilos.setRuta(ruta);
+		administradorHilos.setCommand("sonido");
 		administradorHilos.execute();
 	}
 
@@ -417,8 +412,9 @@ public class InterfazZombieKiller extends JFrame {
 		if (campo.acuchilla(x, y)) {
 			setCursor(cursorCuchillo);
 			reproducir("leDioCuchillo");
-			Thread hArma = new HiloArma(this, campo.getPersonaje().getCuchillo());
-			administradorHilos.setCommand(hArma);
+			administradorHilos.setWeapon(campo.getPersonaje().getCuchillo());
+			administradorHilos.setPrincipal(this);
+			administradorHilos.setCommand("arma");
 			administradorHilos.execute();
 		} else if (armaActual.getMunicion() == 0)
 			reproducir("sin_balas");
@@ -430,8 +426,10 @@ public class InterfazZombieKiller extends JFrame {
 	public void generarBoss() {
 		Boss aMatar = campo.generarBoss();
 		panelCampo.incorporarJefe(aMatar);
-		Thread hBoss = new HiloBoss(this, aMatar, campo);
-		administradorHilos.setCommand(hBoss);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setJefe(aMatar);
+		administradorHilos.setCampo(campo);
+		administradorHilos.setCommand("boss");
 		administradorHilos.execute();
 	}
 
