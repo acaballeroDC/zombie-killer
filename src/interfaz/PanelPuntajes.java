@@ -110,7 +110,7 @@ public class PanelPuntajes extends Componente implements ActionListener {
 		auxPuntajes.add(labKills);
 		auxPuntajes.add(labTC);
 		int i=0;
-		while(it.hasNext() && i <10) {
+		while(it.hasNext() ) {
 			
 			Puntaje score = it.next();
 			labScores[i] = new JLabel(score.getPuntaje() + "");
