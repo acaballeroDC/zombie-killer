@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -17,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 
 import mundo.Puntaje;
 
@@ -81,6 +83,9 @@ public class PanelPuntajes extends Componente implements ActionListener {
 	}
 
 	private void generaryAgregarLabels(ArrayList<Puntaje> scores) {
+		
+		Iterator <Puntaje>it = scores.iterator();
+		
 		labScores = new JLabel[scores.size()];
 		labNombres = new JLabel[scores.size()];
 		labHeadShots = new JLabel[scores.size()];
@@ -104,20 +109,26 @@ public class PanelPuntajes extends Componente implements ActionListener {
 		auxPuntajes.add(labScore);
 		auxPuntajes.add(labKills);
 		auxPuntajes.add(labTC);
-		for (int i = 0; i < scores.size() && i < 10; i++) {
-			labScores[i] = new JLabel(scores.get(i).getPuntaje() + "");
+		int i=0;
+		while(it.hasNext() && i <10) {
+			
+			Puntaje score = it.next();
+			labScores[i] = new JLabel(score.getPuntaje() + "");
 			labScores[i].setForeground(Color.WHITE);
-			labNombres[i] = new JLabel(scores.get(i).getNombreKiller());
+			labNombres[i] = new JLabel(score.getNombreKiller());
 			labNombres[i].setForeground(Color.WHITE);
-			labHeadShots[i] = new JLabel(scores.get(i).getTirosALaCabeza() + "");
+			labHeadShots[i] = new JLabel(score.getTirosALaCabeza() + "");
 			labHeadShots[i].setForeground(Color.WHITE);
-			labBajas[i] = new JLabel(scores.get(i).getBajas() + "");
+			labBajas[i] = new JLabel(score.getBajas() + "");
 			labBajas[i].setForeground(Color.WHITE);
 			auxPuntajes.add(labNombres[i]);
 			auxPuntajes.add(labScores[i]);
 			auxPuntajes.add(labBajas[i]);
 			auxPuntajes.add(labHeadShots[i]);
+			i=i+1;
+			
 		}
+		
 		add(auxPuntajes, BorderLayout.CENTER);
 	}
 	
