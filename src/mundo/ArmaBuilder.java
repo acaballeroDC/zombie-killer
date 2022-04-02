@@ -7,15 +7,21 @@ public  class ArmaBuilder implements IArmaBuilder {
 		switch (tipoArma) {
 		case "Cuchillo": {
 			this.arma= new Cuchillo();
-		
+			break;
 		}
 		case "Granada": {
 			this.arma= new Granada();
-			
+			break;
 		}
-		case "ArmaFuego": {
+		case "M1911": {
+			this.arma= new M1911();
 			
+			break;
+		}
+		case "Remington": {
+			this.arma= new Remington();
 			
+			break;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + tipoArma);
