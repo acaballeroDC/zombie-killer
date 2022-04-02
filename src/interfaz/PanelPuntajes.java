@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -83,18 +83,16 @@ public class PanelPuntajes extends Componente implements ActionListener {
 	}
 
 	private void generaryAgregarLabels(ArrayList<Puntaje> scores) {
-		
-		Iterator <Puntaje>it = scores.iterator();
-		
+		int SCORES_LIMIT = 10;
 		labScores = new JLabel[scores.size()];
 		labNombres = new JLabel[scores.size()];
 		labHeadShots = new JLabel[scores.size()];
 		labBajas = new JLabel[scores.size()];
 		JPanel auxPuntajes = new JPanel();
 		auxPuntajes.setBackground(Color.black);
-		if (scores.size() > 10) {
+		if (scores.size() > SCORES_LIMIT - 1) {
 			auxPuntajes.setLayout(new GridLayout(11, 4));
-			titulo.setText("Top 10 Mejores Puntajes");
+			titulo.setText(String.format("Top %d Mejores Puntajes", SCORES_LIMIT));
 		} else
 			auxPuntajes.setLayout(new GridLayout(scores.size() + 1, 4));
 		JLabel labScore = new JLabel("Score");
@@ -109,26 +107,26 @@ public class PanelPuntajes extends Componente implements ActionListener {
 		auxPuntajes.add(labScore);
 		auxPuntajes.add(labKills);
 		auxPuntajes.add(labTC);
-		int i=0;
-		while(it.hasNext() ) {
-			
-			Puntaje score = it.next();
-			labScores[i] = new JLabel(score.getPuntaje() + "");
-			labScores[i].setForeground(Color.WHITE);
-			labNombres[i] = new JLabel(score.getNombreKiller());
-			labNombres[i].setForeground(Color.WHITE);
-			labHeadShots[i] = new JLabel(score.getTirosALaCabeza() + "");
-			labHeadShots[i].setForeground(Color.WHITE);
-			labBajas[i] = new JLabel(score.getBajas() + "");
-			labBajas[i].setForeground(Color.WHITE);
-			auxPuntajes.add(labNombres[i]);
-			auxPuntajes.add(labScores[i]);
-			auxPuntajes.add(labBajas[i]);
-			auxPuntajes.add(labHeadShots[i]);
-			i=i+1;
-			
+		ListIterator<Puntaje> scoresIterator = scores.listIterator();
+		boolean isTop10 = true;
+		while (scoresIterator.hasNext() && isTop10) {
+			int scoreIndex = scoresIterator.nextIndex();
+			System.out.println(scoreIndex);
+			Puntaje scoreValue = scoresIterator.next();
+			labScores[scoreIndex] = new JLabel(scoreValue.getPuntaje() + "");
+			labScores[scoreIndex].setForeground(Color.WHITE);
+			labNombres[scoreIndex] = new JLabel(scoreValue.getNombreKiller());
+			labNombres[scoreIndex].setForeground(Color.WHITE);
+			labHeadShots[scoreIndex] = new JLabel(scoreValue.getTirosALaCabeza() + "");
+			labHeadShots[scoreIndex].setForeground(Color.WHITE);
+			labBajas[scoreIndex] = new JLabel(scoreValue.getBajas() + "");
+			labBajas[scoreIndex].setForeground(Color.WHITE);
+			auxPuntajes.add(labNombres[scoreIndex]);
+			auxPuntajes.add(labScores[scoreIndex]);
+			auxPuntajes.add(labBajas[scoreIndex]);
+			auxPuntajes.add(labHeadShots[scoreIndex]);
+			if (scoreIndex >= SCORES_LIMIT - 1) isTop10 = false;
 		}
-		
 		add(auxPuntajes, BorderLayout.CENTER);
 	}
 	
