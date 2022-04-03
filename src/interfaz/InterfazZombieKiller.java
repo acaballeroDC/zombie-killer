@@ -11,11 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import hilo.HiloArma;
-import hilo.HiloBoss;
-import hilo.HiloEnemigo;
-import hilo.HiloGeneradorDeZombies;
-import hilo.HiloSonido;
+import control.HiloAdmin;
 import mundo.ArmaDeFuego;
 import mundo.Boss;
 import mundo.NombreInvalidoException;
@@ -27,9 +23,9 @@ import mundo.Zombie;
 public class InterfazZombieKiller extends JFrame implements IInterfazZombieKiller {
 
 	/**
-	 * Hilo que reproduce el sonido de los zombies
+	 * Administrador de hilos (comandos)
 	 */
-	private HiloSonido sonidoFondo;
+	private HiloAdmin administradorHilos;
 	/**
 	 * Campo de juego que contiene a todo el mundo
 	 */
@@ -39,8 +35,8 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 */
 	private ArmaDeFuego armaActual;
 	/**
-	 * Panel del menú principal cualquier botón muestra otro panel
-	 * representatitvo a él
+	 * Panel del menï¿½ principal cualquier botï¿½n muestra otro panel
+	 * representatitvo a ï¿½l
 	 */
 	private PanelMenu panelMenu;
 	/**
@@ -48,7 +44,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 */
 	private PanelCamp panelCampo;
 	/**
-	 * Panel que muestra las instrucciones de juego Muestra las estadísticas de
+	 * Panel que muestra las instrucciones de juego Muestra las estadï¿½sticas de
 	 * las armas
 	 */
 	private PanelComoJugar panelComoJugar;
@@ -57,7 +53,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 */
 	private PanelPuntajes panelPuntajes;
 	/**
-	 * Panel que muestra los créditos de las personas que participaron
+	 * Panel que muestra los crï¿½ditos de las personas que participaron
 	 */
 	private PanelCreditos panelCreditos;
 	/**
@@ -74,14 +70,13 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	private Cursor cursorCuchillo;
 
 	/**
-	 * Constructor de la clase principal del juego Aquí se inicializan todos los
+	 * Constructor de la clase principal del juego Aquï¿½ se inicializan todos los
 	 * componentes necesarios para empezar a jugar
 	 */
 	public InterfazZombieKiller() {
+		administradorHilos = new HiloAdmin();
 		BorderLayout custom = new BorderLayout();
 		setLayout(custom);
-		ImageIcon laterales = new ImageIcon(getClass().getResource("/img/Fondo/iconozombie.png"));
-		ImageIcon fondo = new ImageIcon(getClass().getResource("/img/Fondo/fondoMenu.png"));
 
 		ImageIcon cursorP = new ImageIcon(getClass().getResource("/img/Fondo/mira1p.png"));
 		miraM1911 = Toolkit.getDefaultToolkit().createCustomCursor(cursorP.getImage(), new Point(16, 16), "C");
@@ -102,7 +97,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 		try {
 			campo.cargarPuntajes();
 		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(this, "Hubo un error al guardar los últimos puntajes");
+			JOptionPane.showMessageDialog(this, "Hubo un error al guardar los ï¿½ltimos puntajes");
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "No se han encontrado puntajes anteriores");
 		}
@@ -139,7 +134,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Método auxiliar que inicializa y actualiza la información en los
+	 * Mï¿½todo auxiliar que inicializa y actualiza la informaciï¿½n en los
 	 * componentes visibles
 	 */
 	private void partidaIniciada() {
@@ -157,16 +152,19 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 		panelCampo.setVisible(true);
 		add(panelCampo, BorderLayout.CENTER);
 		panelCampo.requestFocusInWindow();
-		HiloGeneradorDeZombies generador = new HiloGeneradorDeZombies(this, campo);
-		generador.start();
-		HiloEnemigo hE = new HiloEnemigo(this, campo.getZombNodoCercano(), campo);
-		hE.start();
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCampo(campo);
+		administradorHilos.setNodoCercano(campo.getZombNodoCercano());
+		administradorHilos.setCommand("generadorZombies");
+		administradorHilos.execute();
+		administradorHilos.setCommand("enemigo");
+		administradorHilos.execute();
 	}
 
 	/**
-	 * pregunta si en el PanelCamp se están cargando las imágenes
+	 * pregunta si en el PanelCamp se estï¿½n cargando las imï¿½genes
 	 * 
-	 * @return true si aún se están cargando
+	 * @return true si aï¿½n se estï¿½n cargando
 	 */
 	public boolean estaCargando() {
 		boolean pintando = false;
@@ -205,10 +203,13 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 			campo.setEstadoJuego(campo.EN_CURSO);
 			add(panelCampo, BorderLayout.CENTER);
 			panelCampo.requestFocusInWindow();
-			HiloEnemigo hE = new HiloEnemigo(this, campo.getZombNodoCercano(), campo);
-			HiloGeneradorDeZombies generador = new HiloGeneradorDeZombies(this, campo);
-			hE.start();
-			generador.start();
+			administradorHilos.setPrincipal(this);
+			administradorHilos.setCampo(campo);
+			administradorHilos.setNodoCercano(campo.getZombNodoCercano());
+			administradorHilos.setCommand("generadorZombies");
+			administradorHilos.execute();
+			administradorHilos.setCommand("enemigo");
+			administradorHilos.execute();
 			iniciarGemi2();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -216,7 +217,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Guarda la partida que está en curso
+	 * Guarda la partida que estï¿½ en curso
 	 */
 	public void guardarJuego() {
 		try {
@@ -243,8 +244,8 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	/**
 	 * <pre></pre>
 	 * 
-	 * el juego no se encuentra pausado dispara el arma principal en la posición
-	 * pasada por parámetro
+	 * el juego no se encuentra pausado dispara el arma principal en la posiciï¿½n
+	 * pasada por parï¿½metro
 	 * 
 	 * @param posX
 	 * @param posY
@@ -254,24 +255,26 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 			reproducir("leDio" + armaActual.getClass().getSimpleName());
 		} else
 			reproducir("disparo" + armaActual.getClass().getSimpleName());
-		HiloArma hA = new HiloArma(this, armaActual);
-		hA.start();
+		administradorHilos.setWeapon(armaActual);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
+		administradorHilos.execute();
 	}
 
 	/**
 	 * inicia el sonido de los zombies
 	 */
 	public void iniciarGemi2() {
-		sonidoFondo = new HiloSonido("zombies");
-		sonidoFondo.start();
+		administradorHilos.setBackgroundSound("zombies");
+		administradorHilos.executeBackgroundSound();
 	}
 
 	/**
 	 * termina el sonido de los zombies
 	 */
 	public void terminarGemi2() {
-		if (sonidoFondo != null)
-			sonidoFondo.detenerSonido();
+		if (administradorHilos.getBackgroundSound() != null)
+			administradorHilos.stopBackgroundSound();
 	}
 
 	/**
@@ -320,9 +323,10 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 */
 	public void granadaLanzada() {
 		campo.seLanzoGranada();
-		HiloArma hA = new HiloArma(this, campo.getPersonaje().getGranadas());
-		hA.start();
-		reproducir("bomba");
+		administradorHilos.setWeapon(campo.getPersonaje().getGranadas());
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
+		administradorHilos.execute();
 	}
 
 	/**
@@ -331,8 +335,10 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	public void cargarArmaPersonaje() {
 		campo.getPersonaje().cargo();
 		reproducir("carga" + armaActual.getClass().getSimpleName());
-		HiloArma hA = new HiloArma(this, armaActual);
-		hA.start();
+		administradorHilos.setWeapon(armaActual);
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setCommand("arma");
+		administradorHilos.execute();
 	}
 
 	/**
@@ -341,12 +347,13 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * @param ruta
 	 */
 	public void reproducir(String ruta) {
-		HiloSonido efecto = new HiloSonido(ruta);
-		efecto.start();
+		administradorHilos.setRuta(ruta);
+		administradorHilos.setCommand("sonido");
+		administradorHilos.execute();
 	}
 
 	/**
-	 * cambia el arma del personaje y actualiza aquí
+	 * cambia el arma del personaje y actualiza aquï¿½
 	 */
 	public void cambiarArma() {
 		campo.cambiarArma();
@@ -394,7 +401,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 
 	/**
 	 * <pre>
-	 * la posición en el eje Y está por debajo de la que el zombie ataca
+	 * la posiciï¿½n en el eje Y estï¿½ por debajo de la que el zombie ataca
 	 * </pre>
 	 * 
 	 * intenta acuchillar
@@ -406,8 +413,10 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 		if (campo.acuchilla(x, y)) {
 			setCursor(cursorCuchillo);
 			reproducir("leDioCuchillo");
-			HiloArma hA = new HiloArma(this, campo.getPersonaje().getCuchillo());
-			hA.start();
+			administradorHilos.setWeapon(campo.getPersonaje().getCuchillo());
+			administradorHilos.setPrincipal(this);
+			administradorHilos.setCommand("arma");
+			administradorHilos.execute();
 		} else if (armaActual.getMunicion() == 0)
 			reproducir("sin_balas");
 	}
@@ -418,12 +427,15 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	public void generarBoss() {
 		Boss aMatar = campo.generarBoss();
 		panelCampo.incorporarJefe(aMatar);
-		HiloBoss hB = new HiloBoss(this, aMatar, campo);
-		hB.start();
+		administradorHilos.setPrincipal(this);
+		administradorHilos.setJefe(aMatar);
+		administradorHilos.setCampo(campo);
+		administradorHilos.setCommand("boss");
+		administradorHilos.execute();
 	}
 
 	/**
-	 * Muestra el Panel de Cómo jugar / Lo oculta
+	 * Muestra el Panel de Cï¿½mo jugar / Lo oculta
 	 */
 	public void mostrarComoJugar() {
 		if (panelMenu.isVisible()) {
@@ -452,7 +464,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Muestra el Panel donde se encuentran los créditos / lo oculta
+	 * Muestra el Panel donde se encuentran los crï¿½ditos / lo oculta
 	 */
 	public void mostrarCreditos() {
 		if (panelMenu.isVisible()) {
@@ -466,34 +478,34 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * obtiene el número de referencia al arma que se muestra en el panelArmas
+	 * obtiene el nï¿½mero de referencia al arma que se muestra en el panelArmas
 	 * 
-	 * @return número de referencia
+	 * @return nï¿½mero de referencia
 	 */
 	public int darArmaMostrada() {
 		return campo.getArmaMostrada();
 	}
 
 	/**
-	 * Cambia el arma que se está viendo por el de la derecha
+	 * Cambia el arma que se estï¿½ viendo por el de la derecha
 	 * 
-	 * @return número de referencia al arma de la derecha
+	 * @return nï¿½mero de referencia al arma de la derecha
 	 */
 	public int cambiarArmaVisibleDerecha() {
 		return campo.moverArmaVisibleDerecha();
 	}
 
 	/**
-	 * Cambia el arma que se está viendo por el de la izquierda
+	 * Cambia el arma que se estï¿½ viendo por el de la izquierda
 	 * 
-	 * @return número de referencia al arma de la izquierda
+	 * @return nï¿½mero de referencia al arma de la izquierda
 	 */
 	public int cambiarArmaVisibleIzquierda() {
 		return campo.moverArmaVisibleIzquierda();
 	}
 
 	/**
-	 * Método llamado cuando el personaje muere para verificar si el jugador
+	 * Mï¿½todo llamado cuando el personaje muere para verificar si el jugador
 	 * desea seguir o no
 	 */
 	public void juegoTerminado() {
@@ -510,7 +522,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 					campo.aniadirMejoresPuntajes(nombrePlayer);
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(this,
-							"Error al guardar el puntaje, es posible que haya abierto el juego desde \"Acceso rápido\"");
+							"Error al guardar el puntaje, es posible que haya abierto el juego desde \"Acceso rï¿½pido\"");
 				} catch (NombreInvalidoException e) {
 					JOptionPane.showMessageDialog(this, e.getMessage());
 					juegoTerminado();
@@ -534,7 +546,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Método que se ejecuta cuando el Boss muere
+	 * Mï¿½todo que se ejecuta cuando el Boss muere
 	 */
 	public void victoria() {
 		String nombrePlayer = JOptionPane.showInputDialog(this,
@@ -546,7 +558,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 			campo.aniadirMejoresPuntajes(nombrePlayer);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this,
-					"Error al guardar el puntaje, es posible que haya abierto el juego desde \"Acceso rápido\"");
+					"Error al guardar el puntaje, es posible que haya abierto el juego desde \"Acceso rï¿½pido\"");
 		} catch (NombreInvalidoException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 			victoria();
@@ -560,14 +572,14 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Llama al método de ordenar por bajas
+	 * Llama al mï¿½todo de ordenar por bajas
 	 */
 	public void ordenarPorBajas() {
 		panelPuntajes.actualizarPuntajes(campo.ordenarPuntajePorBajas());
 	}
 
 	/**
-	 * Llama al método de ordenar por bajas con tiro a la cabeza
+	 * Llama al mï¿½todo de ordenar por bajas con tiro a la cabeza
 	 */
 	public void ordenarPorHeadshot() {
 		panelPuntajes.actualizarPuntajes(campo.ordenarPuntajePorTirosALaCabeza());
@@ -585,7 +597,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	}
 
 	/**
-	 * Llama al método de ordenar por puntaje
+	 * Llama al mï¿½todo de ordenar por puntaje
 	 */
 	public void ordenarPorScore() {
 		panelPuntajes.actualizarPuntajes(campo.ordenarPuntajePorScore());

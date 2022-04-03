@@ -1,2 +1,0 @@
-# zombie-killer
-Proyecto academico

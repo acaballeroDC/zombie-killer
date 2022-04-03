@@ -12,7 +12,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -156,7 +155,7 @@ public class PanelPuntajes extends Componente implements ActionListener {
 			generaryAgregarLabels(aMostrar);
 			updateUI();
 		} else
-			JOptionPane.showMessageDialog(this, "No se encontró el nombre buscado en los puntajes");
+			JOptionPane.showMessageDialog(this, "No se encontrï¿½ el nombre buscado en los puntajes");
 	}
 
 	@Override
