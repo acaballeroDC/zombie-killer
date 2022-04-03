@@ -13,21 +13,21 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public class PanelComoJugar extends JPanel {
+public class PanelComoJugar extends Componente {
 
 	private static final String SALIR = "Salir";
 	private PanelDatosCuriosos panelDatosC;
 	private PanelArmas panelArmas;
 	private JScrollPane scroll;
 	private JButton butSalir;
-	private InterfazZombieKiller principal;
 	
-	public PanelComoJugar (InterfazZombieKiller inter) {
+	
+	public PanelComoJugar (IInterfazZombieKiller inter) {
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
-		principal = inter;
+		super.setMediador(inter);
 		panelDatosC = new PanelDatosCuriosos();
-		panelArmas = new PanelArmas(principal);
+		panelArmas = new PanelArmas(super.m);
 		butSalir = new JButton();
 		configurarBoton(butSalir, getClass().getResource("/img/Palabras/volver.png"), SALIR);
 		butSalir.setActionCommand(SALIR);
@@ -68,7 +68,7 @@ public class PanelComoJugar extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				principal.mostrarComoJugar();
+				m.mostrarComoJugar();
 			}
 		});
 	}

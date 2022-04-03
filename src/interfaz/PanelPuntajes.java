@@ -18,9 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+
 import mundo.Puntaje;
 
-public class PanelPuntajes extends JPanel implements ActionListener {
+public class PanelPuntajes extends Componente implements ActionListener {
 
 	private static final String ORDEN_HEADSHOT = "Filtrar por tiros a la cabeza";
 	private static final String ORDEN_BAJAS = "Filtrar por bajas";
@@ -38,10 +39,10 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	private JButton butFiltroBajas;
 	private JButton butFiltroScore;
 	private JButton butSalir;
-	private InterfazZombieKiller principal;
+	
 
-	public PanelPuntajes(InterfazZombieKiller inter) {
-		principal = inter;
+	public PanelPuntajes(IInterfazZombieKiller inter) {
+		super.setMediador(inter);
 		setBackground(Color.black);
 		Font f = new Font("Chiller", Font.BOLD, 26);
 		titulo = new JLabel("Puntajes");
@@ -161,13 +162,13 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String c = arg0.getActionCommand();
 		if (c.equals(ORDEN_BAJAS))
-			principal.ordenarPorBajas();
+			super.m.ordenarPorBajas();
 		else if (c.equals(ORDEN_HEADSHOT))
-			principal.ordenarPorHeadshot();
+			super.m.ordenarPorHeadshot();
 		else if (c.equals(BUSCAR_NOMBRE))
-			principal.buscarPorNombre();
+			super.m.buscarPorNombre();
 		else if (c.equals(ORDEN_SCORE))
-			principal.ordenarPorScore();
+			super.m.ordenarPorScore();
 	}
 
 	public void configurarBoton(JButton aEditar, URL rutaImagen, String comando) {
@@ -200,7 +201,7 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				principal.mostrarPuntajes();
+				m.mostrarPuntajes();
 			}
 		});
 	}

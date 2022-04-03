@@ -19,7 +19,7 @@ import javax.tools.Tool;
 
 import mundo.*;
 
-public class PanelCamp extends JPanel implements MouseListener, KeyListener {
+public class PanelCamp extends Componente implements MouseListener, KeyListener {
 
 	private JLabel labPuntaje;
 	private JLabel labBajas;
@@ -29,7 +29,7 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 	private JLabel labGranadas;
 	private JLabel labBalas;
 	private JPanel mostrador;
-	private InterfazZombieKiller principal;
+	
 	private Zombie chombiMasLejano;
 	private Personaje matador;
 	private Point ultimoDisparo;
@@ -37,10 +37,10 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 	private ArmaDeFuego armaEquipada;
 	private Boss chief;
 
-	public PanelCamp(InterfazZombieKiller inter) {
+	public PanelCamp(IInterfazZombieKiller inter) {
 		setLayout(new BorderLayout());
 		Font tipo = new Font("Chiller", Font.PLAIN, 34);
-
+		super.setMediador(inter);
 		ultimoDisparo = new Point();
 		setDebugGraphicsOptions(DebugGraphics.BUFFERED_OPTION);
 		mostrador = new JPanel();
@@ -80,8 +80,7 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 		labBalas.setVerticalAlignment(SwingConstants.TOP);
 		labBalas.setForeground(Color.white);
 
-		principal = inter;
-
+		
 		addMouseListener(this);
 		addKeyListener(this);
 		setFocusable(true);
@@ -118,7 +117,7 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 	}
 
 	public void actualizarRonda() {
-		labRonda.setText("Ronda: " + principal.darRondaActual());
+		labRonda.setText("Ronda: " + super.m.darRondaActual());
 	}
 
 	public void incorporarJefe(Boss aMatar) {
@@ -151,7 +150,7 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 					arg0.drawImage(imgZombie, posX, posY, null);
 					aPintar = aPintar.getAlFrente();
 				} catch (Exception e) {
-					principal.pausarJuego();
+					super.m.pausarJuego();
 					e.printStackTrace();
 				}
 				// System.out.println(chombis.size());
@@ -182,9 +181,9 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 			fondo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/Fondo/boss_ataca.png"));
 			arg0.drawImage(fondo, 0, 0, null);
 		}
-		if (principal.getEstadoPartida() == SurvivorCamp.INICIANDO_RONDA) {
+		if (super.m.getEstadoPartida() == SurvivorCamp.INICIANDO_RONDA) {
 			fondo = Toolkit.getDefaultToolkit()
-					.getImage(getClass().getResource("/img/Palabras/ronda" + principal.darRondaActual() + ".png"));
+					.getImage(getClass().getResource("/img/Palabras/ronda" + super.m.darRondaActual() + ".png"));
 			arg0.drawImage(fondo, 100, 300, null);
 		}
 	}
@@ -299,29 +298,29 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		if (principal.getEstadoPartida() == SurvivorCamp.EN_CURSO)
-			principal.pausarJuego();
+		if (super.m.getEstadoPartida() == SurvivorCamp.EN_CURSO)
+			super.m.pausarJuego();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		if (principal.getEstadoPartida() == SurvivorCamp.EN_CURSO) {
+		if (super.m.getEstadoPartida() == SurvivorCamp.EN_CURSO) {
 			if (arg0.getButton() == MouseEvent.BUTTON1) {
 				int x = arg0.getX();
 				int y = arg0.getY();
 				if (armaEquipada.getEstado().equals(Arma.LISTA) && armaEquipada.getMunicion() > 0) {
 					ultimoDisparo = arg0.getPoint();
-					principal.disparar(x, y);
+					super.m.disparar(x, y);
 				} else if (y > Zombie.POS_ATAQUE && matador.getCuchillo().getEstado().equals(Arma.LISTA)) {
 					ultimoDisparo = arg0.getPoint();
-					principal.acuchillar(x, y);
+					super.m.acuchillar(x, y);
 				} else if (armaEquipada.getMunicion() == 0)
-					principal.reproducir("sin_balas");
+					super.m.reproducir("sin_balas");
 				labPuntaje.setText("Puntaje: " + matador.getScore());
 				labBajas.setText("Bajas: " + matador.getMatanza());
 			} else if (arg0.getButton() == MouseEvent.BUTTON3
 					&& armaEquipada.getMunicion() < armaEquipada.getLimBalas())
-				principal.cargarArmaPersonaje();
+				super.m.cargarArmaPersonaje();
 			labBalas.setText("" + armaEquipada.getMunicion());
 		}
 	}
@@ -337,14 +336,14 @@ public class PanelCamp extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (principal.getEstadoPartida() == SurvivorCamp.EN_CURSO) {
+		if (super.m.getEstadoPartida() == SurvivorCamp.EN_CURSO) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE || e.getKeyCode() == KeyEvent.VK_ALT || e.getKeyCode() == KeyEvent.VK_P)
-				principal.pausarJuego();
+			super.m.pausarJuego();
 			else if (e.getKeyCode() == KeyEvent.VK_C) {
-				principal.cambiarArma();
+				super.m.cambiarArma();
 				actualizarEquipada(matador.getPrincipal());
 			} else if (e.getKeyCode() == KeyEvent.VK_SPACE && matador.getGranadas().getMunicion() > 0) {
-				principal.granadaLanzada();
+				super.m.granadaLanzada();
 				labGranadas.setText("" + matador.getGranadas().getMunicion());
 			} 
 		}

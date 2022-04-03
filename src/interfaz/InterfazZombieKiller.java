@@ -20,7 +20,8 @@ import mundo.Remington;
 import mundo.SurvivorCamp;
 import mundo.Zombie;
 
-public class InterfazZombieKiller extends JFrame {
+public class InterfazZombieKiller extends JFrame implements IInterfazZombieKiller {
+
 	/**
 	 * Administrador de hilos (comandos)
 	 */
