@@ -81,35 +81,4 @@ public final class EnemigoFactory{
 
 		return enemigo;
 	}
-
-	public static Enemigo createEnemigo(String tipo, int posX, int posY, int direccionX, int direccionY, String estadoActual, byte frameActual, byte salud, int ronda) {
-		Enemigo enemigo;
-		if(tipo=="Rastrero") {
-			enemigo = new Rastrero();
-		}
-		else if(tipo=="Boss"){
-			enemigo = new Boss();
-		}
-		else{
-			enemigo = new Caminante(posX, posY, direccionX,  direccionY,  estadoActual,  frameActual,  salud,  ronda);
-		}
-
-		return enemigo;
-	}
-
-	public static Enemigo createEnemigo(String tipo, int posX, int posY, String estadoActual, byte frameActual, byte salud, int ronda) {
-		Enemigo enemigo;
-		if(tipo=="Rastrero") {
-			enemigo = new Rastrero( posX,  posY,  estadoActual,  frameActual,  salud,  ronda);
-		}
-		else if(tipo=="Boss"){
-			enemigo = new Boss();
-		}
-		else{
-			enemigo = new Caminante();
-		}
-
-		return enemigo;
-	}
-
 }

@@ -166,7 +166,7 @@ public class PanelCamp extends Componente implements MouseListener, KeyListener 
 			arg0.drawImage(fondo, ataqueX - 33, ataqueY - 35, null);
 		}
 		if (matador.getCuchillo().getEstado().equals(Arma.CARGANDO)) {
-			fondo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/Fondo/pu�alada.png"));
+			fondo = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/Fondo/punalada.png"));
 			arg0.drawImage(fondo, ataqueX - 160, ataqueY - 30, null);
 		} else if (armaEquipada.getEstado().equals(ArmaDeFuego.RECARGANDO)) {
 			fondo = Toolkit.getDefaultToolkit().getImage(this.getClass()
@@ -227,7 +227,7 @@ public class PanelCamp extends Componente implements MouseListener, KeyListener 
 						contador++;
 						formato = new Formatter();
 						actual = new ImageIcon(getClass()
-								.getResource("/img/Caminante/gru�endo/" + formato.format("%02d", i) + ".png"));
+								.getResource("/img/Caminante/grunendo/" + formato.format("%02d", i) + ".png"));
 						imagenesCargadas[contador] = actual;
 						contador++;
 						if (i <= 13) {

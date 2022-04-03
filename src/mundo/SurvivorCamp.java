@@ -203,9 +203,9 @@ public class SurvivorCamp implements Cloneable, Comparator<Puntaje> {
 		Zombie aGenerar;
 
 		if (tipoZombie == 1)
-			aGenerar = new (Zombie) EnemigoFactory.createEnemigo("Rastrero", level, zombNodoLejano);
+			aGenerar = (Zombie) EnemigoFactory.createEnemigo("Rastrero", level, zombNodoLejano);
 		else
-			aGenerar = new (Zombie) EnemigoFactory.createEnemigo("Caminante", level, zombNodoLejano);
+			aGenerar = (Zombie) EnemigoFactory.createEnemigo("Caminante", level, zombNodoLejano);
 
 		aGenerar.introducirse(zombNodoLejano.getAlFrente(), zombNodoLejano);
 		cantidadZombiesGenerados++;
