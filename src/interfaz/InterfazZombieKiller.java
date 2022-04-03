@@ -20,6 +20,8 @@ import mundo.Remington;
 import mundo.SurvivorCamp;
 import mundo.Zombie;
 
+import org.apache.log4j.Logger;
+
 public class InterfazZombieKiller extends JFrame implements IInterfazZombieKiller {
 
 	/**
@@ -68,6 +70,8 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * Cursor temporal del cuchillo
 	 */
 	private Cursor cursorCuchillo;
+	
+	static Logger log = Logger.getLogger(InterfazZombieKiller.class);
 
 	/**
 	 * Constructor de la clase principal del juego Aqu� se inicializan todos los
@@ -120,6 +124,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * Inicia una partida desde 0
 	 */
 	public void iniciarNuevaPartida() {
+		log.info("Se inicia una partida");
 		if (campo.getEstadoJuego() != SurvivorCamp.SIN_PARTIDA) {
 			int respuesta = JOptionPane.showConfirmDialog(this,
 					"En este momento se encuentra en una partida, segudo que desea salir?", "Iniciar Nueva Partida",
@@ -220,6 +225,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * Guarda la partida que est� en curso
 	 */
 	public void guardarJuego() {
+		log.info("Se guarda la partida");
 		try {
 			campo.guardarPartida();
 			JOptionPane.showMessageDialog(this, "Partida Guardada");
@@ -299,6 +305,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * Pausa y despausa el juego
 	 */
 	public void pausarJuego() {
+		log.info("Juego pausado");
 		char estado = campo.pausarJuego();
 		if (estado == SurvivorCamp.PAUSADO) {
 			terminarGemi2();
@@ -392,6 +399,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * @param nivel
 	 */
 	public void subirDeRonda(int nivel) {
+		log.info("Cambio de ronda");
 		terminarGemi2();
 		reproducir("sirena");
 		campo.actualizarRondaActual((byte) nivel);
@@ -509,6 +517,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * desea seguir o no
 	 */
 	public void juegoTerminado() {
+		log.info("Se finaliza una partida");
 		boolean seLlamoDeNuevo = false;
 		int aceptoGuardarScore = JOptionPane.showConfirmDialog(this,
 				"Su puntaje fue: " + campo.getPersonaje().getScore() + ", con " + campo.getPersonaje().getMatanza()
@@ -549,6 +558,7 @@ public class InterfazZombieKiller extends JFrame implements IInterfazZombieKille
 	 * M�todo que se ejecuta cuando el Boss muere
 	 */
 	public void victoria() {
+		log.info("El jugador ha ganado");
 		String nombrePlayer = JOptionPane.showInputDialog(this,
 				"Enhorabuena, has pasado todas los niveles de dificultad. su puntaje final es: "
 						+ campo.getPersonaje().getScore() + ". Escribe tu nombre");
