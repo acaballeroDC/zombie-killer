@@ -50,11 +50,31 @@ public class Personaje implements SerViviente, Serializable {
 	 * los valores no inicializados tienen por defecto 0
 	 */
 	public Personaje() {
+		
+		ArmaDirector armadirector = new ArmaDirector();
+		ArmaBuilder granadaBuider = new ArmaBuilder("Granada");
+		armadirector.setBuilder(granadaBuider);
+		
 		salud = SALUD;
-		granadas = new Granada();
-		armaPrincipal = new M1911();
-		armaSecundaria = new Remington();
-		cuchillo = new Cuchillo();
+		granadas =(Granada) armadirector.createArma();
+		
+
+		ArmaBuilder m1911Builder = new ArmaBuilder("M1911");
+		armadirector.setBuilder(m1911Builder);
+		
+		armaPrincipal = (M1911) armadirector.createArma();
+		
+
+		ArmaBuilder remingtonBuilder = new ArmaBuilder("Remington");
+		armadirector.setBuilder(remingtonBuilder);
+		armaSecundaria = (Remington) armadirector.createArma();
+		
+
+		ArmaBuilder cuchilloBuilder = new ArmaBuilder("Cuchillo");
+		armadirector.setBuilder(cuchilloBuilder);
+	
+		
+		cuchillo = (Cuchillo) armadirector.createArma();
 		// municion = principal.getLimBalas();
 	}
 

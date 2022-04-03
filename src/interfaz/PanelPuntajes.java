@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -18,9 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+
 import mundo.Puntaje;
 
-public class PanelPuntajes extends JPanel implements ActionListener {
+public class PanelPuntajes extends Componente implements ActionListener {
 
 	private static final String ORDEN_HEADSHOT = "Filtrar por tiros a la cabeza";
 	private static final String ORDEN_BAJAS = "Filtrar por bajas";
@@ -38,10 +40,10 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	private JButton butFiltroBajas;
 	private JButton butFiltroScore;
 	private JButton butSalir;
-	private InterfazZombieKiller principal;
+	
 
-	public PanelPuntajes(InterfazZombieKiller inter) {
-		principal = inter;
+	public PanelPuntajes(IInterfazZombieKiller inter) {
+		super.setMediador(inter);
 		setBackground(Color.black);
 		Font f = new Font("Chiller", Font.BOLD, 26);
 		titulo = new JLabel("Puntajes");
@@ -81,15 +83,16 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	}
 
 	private void generaryAgregarLabels(ArrayList<Puntaje> scores) {
+		int SCORES_LIMIT = 10;
 		labScores = new JLabel[scores.size()];
 		labNombres = new JLabel[scores.size()];
 		labHeadShots = new JLabel[scores.size()];
 		labBajas = new JLabel[scores.size()];
 		JPanel auxPuntajes = new JPanel();
 		auxPuntajes.setBackground(Color.black);
-		if (scores.size() > 10) {
+		if (scores.size() > SCORES_LIMIT - 1) {
 			auxPuntajes.setLayout(new GridLayout(11, 4));
-			titulo.setText("Top 10 Mejores Puntajes");
+			titulo.setText(String.format("Top %d Mejores Puntajes", SCORES_LIMIT));
 		} else
 			auxPuntajes.setLayout(new GridLayout(scores.size() + 1, 4));
 		JLabel labScore = new JLabel("Score");
@@ -104,19 +107,25 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 		auxPuntajes.add(labScore);
 		auxPuntajes.add(labKills);
 		auxPuntajes.add(labTC);
-		for (int i = 0; i < scores.size() && i < 10; i++) {
-			labScores[i] = new JLabel(scores.get(i).getPuntaje() + "");
-			labScores[i].setForeground(Color.WHITE);
-			labNombres[i] = new JLabel(scores.get(i).getNombreKiller());
-			labNombres[i].setForeground(Color.WHITE);
-			labHeadShots[i] = new JLabel(scores.get(i).getTirosALaCabeza() + "");
-			labHeadShots[i].setForeground(Color.WHITE);
-			labBajas[i] = new JLabel(scores.get(i).getBajas() + "");
-			labBajas[i].setForeground(Color.WHITE);
-			auxPuntajes.add(labNombres[i]);
-			auxPuntajes.add(labScores[i]);
-			auxPuntajes.add(labBajas[i]);
-			auxPuntajes.add(labHeadShots[i]);
+		ListIterator<Puntaje> scoresIterator = scores.listIterator();
+		boolean isTop10 = true;
+		while (scoresIterator.hasNext() && isTop10) {
+			int scoreIndex = scoresIterator.nextIndex();
+			System.out.println(scoreIndex);
+			Puntaje scoreValue = scoresIterator.next();
+			labScores[scoreIndex] = new JLabel(scoreValue.getPuntaje() + "");
+			labScores[scoreIndex].setForeground(Color.WHITE);
+			labNombres[scoreIndex] = new JLabel(scoreValue.getNombreKiller());
+			labNombres[scoreIndex].setForeground(Color.WHITE);
+			labHeadShots[scoreIndex] = new JLabel(scoreValue.getTirosALaCabeza() + "");
+			labHeadShots[scoreIndex].setForeground(Color.WHITE);
+			labBajas[scoreIndex] = new JLabel(scoreValue.getBajas() + "");
+			labBajas[scoreIndex].setForeground(Color.WHITE);
+			auxPuntajes.add(labNombres[scoreIndex]);
+			auxPuntajes.add(labScores[scoreIndex]);
+			auxPuntajes.add(labBajas[scoreIndex]);
+			auxPuntajes.add(labHeadShots[scoreIndex]);
+			if (scoreIndex >= SCORES_LIMIT - 1) isTop10 = false;
 		}
 		add(auxPuntajes, BorderLayout.CENTER);
 	}
@@ -154,13 +163,13 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String c = arg0.getActionCommand();
 		if (c.equals(ORDEN_BAJAS))
-			principal.ordenarPorBajas();
+			super.m.ordenarPorBajas();
 		else if (c.equals(ORDEN_HEADSHOT))
-			principal.ordenarPorHeadshot();
+			super.m.ordenarPorHeadshot();
 		else if (c.equals(BUSCAR_NOMBRE))
-			principal.buscarPorNombre();
+			super.m.buscarPorNombre();
 		else if (c.equals(ORDEN_SCORE))
-			principal.ordenarPorScore();
+			super.m.ordenarPorScore();
 	}
 
 	public void configurarBoton(JButton aEditar, URL rutaImagen, String comando) {
@@ -193,7 +202,7 @@ public class PanelPuntajes extends JPanel implements ActionListener {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				principal.mostrarPuntajes();
+				m.mostrarPuntajes();
 			}
 		});
 	}
